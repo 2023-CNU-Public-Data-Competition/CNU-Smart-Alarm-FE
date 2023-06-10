@@ -4,11 +4,14 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PostList from './pages/PostList';
 import Post from './pages/Post';
+import Notification from './pages/Notification';
+
 
 // 앱이 각 화면이 전환될 수 있는 기본 틀을 제공한다. 
 const Stack = createStackNavigator(); 
 
 export default function App() {
+
   return (
     //네비게이션의 트리를 관리해주는 컴포넌트 
     <NavigationContainer> 
@@ -19,13 +22,6 @@ export default function App() {
               name="PostList" 
               component={PostList}
               options={{
-                /*
-                headerLeft: ({onPress}) => (
-                  <TouchableOpacity onPress={onPress}>
-                    <Text>Left</Text>
-                  </TouchableOpacity>
-                ),
-                */
                 headerTitle: () => (
                   <View >
                     <Text style={styles.header}>CNU 똑똑이</Text>
@@ -35,25 +31,12 @@ export default function App() {
                   backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
                   color: "4469C0" 
                 },
-                /*
-                headerRight: () => (
-                  <View>
-                    <Text>Right</Text>
-                  </View>
-                ),
-                */
               }}
             /> 
             <Stack.Screen 
               name="Post" 
               component={Post}
               options={{
-                /*
-                headerLeft: () => (
-                  <TouchableOpacity >
-                    <Text>back</Text>
-                  </TouchableOpacity>
-                ),*/
                 headerTitle: () => (
                   <View >
                     <Text style={styles.header}>내용확인</Text>
@@ -63,12 +46,11 @@ export default function App() {
                   backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
                   color: "4469C0" 
                 },
-                headerRight: () => (
-                  <View>
-                    <Button title="notice" />
-                  </View>
-                ),
               }}
+            /> 
+            <Stack.Screen 
+              name="Notification" 
+              component={Notification}
             /> 
         </Stack.Navigator> 
     </NavigationContainer>  
