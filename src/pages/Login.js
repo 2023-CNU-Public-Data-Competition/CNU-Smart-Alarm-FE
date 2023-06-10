@@ -50,6 +50,7 @@ export default function Login(){
           onChangeText={onChangePw}
           //onSubmitEditing={addTodo}
           value={pw}
+          secureTextEntry={true}
           placeholder={"비밀번호"} 
           style={styles.input}
         />

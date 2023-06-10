@@ -8,7 +8,7 @@ import NavigationBar from "../components/NavigationBar";
 import PostPreview from "../components/postPreview";
 
 
-export default function Notification() {
+export default function NotificationList() {
   const navigation = useNavigation();
   const route = useRoute();
 

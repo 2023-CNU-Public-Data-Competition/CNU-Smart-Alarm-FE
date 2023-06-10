@@ -15,7 +15,7 @@ export default function PostList() {
       headerRight: () => (
         <Button
           title="notice"
-          onPress={() => navigation.navigate('Notification')}
+          onPress={() => navigation.navigate('NotificationList')}
         />
       ),
     });
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   selectedCategory: {
     flex: 1,
     padding: 20,
+    zIndex: 1
   },
   tags: {
     flex: 0.7,    

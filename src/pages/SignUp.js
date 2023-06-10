@@ -48,11 +48,15 @@ export default function SignUp(){
           //onSubmitEditing={addTodo}
           value={pw}
           placeholder={"비밀번호"} 
+          secureTextEntry={true}
           style={styles.input}
         />
         <Button 
           title="회원가입"
-          onPress={() => fetchSignUp(id, pw)}
+          onPress={() => {
+            const sighUpRes = fetchSignUp(id, pw);
+            navigation.navigate("SelectCategory", {token: sighUpRes.token})
+          }}
         />
       </View>
       <View style={styles.goSignUp}>
