@@ -5,7 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PostList from './pages/PostList';
 import Post from './pages/Post';
 import Notification from './pages/Notification';
-
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 
 // 앱이 각 화면이 전환될 수 있는 기본 틀을 제공한다. 
 const Stack = createStackNavigator(); 
@@ -18,6 +19,20 @@ export default function App() {
       {/* 네비게이션 기본틀의 스택을 생성 */} 
         <Stack.Navigator> 
           {/* 해당스택에 들어갈 화면 요소를 넣어준다. */}
+            <Stack.Screen 
+              name="Login" 
+              component={Login}
+              options={{
+                headerShown: false
+              }}
+            /> 
+            <Stack.Screen 
+              name="SignUp" 
+              component={SignUp}
+              options={{
+                headerShown: false
+              }}
+            /> 
             <Stack.Screen 
               name="PostList" 
               component={PostList}
