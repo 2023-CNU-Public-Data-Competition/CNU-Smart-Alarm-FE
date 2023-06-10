@@ -1,19 +1,33 @@
 import { StatusBar } from "expo-status-bar";
-import { View, StyleSheet, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Button, Text, FlatList, TouchableOpacity } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chip, Divider } from "@react-native-material/core";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import NavigationBar from "../components/NavigationBar";
+import PostPreview from "../components/postPreview";
 
 export default function PostList() {
-
   const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="notice"
+          onPress={() => navigation.navigate('NotificationList')}
+        />
+      ),
+    });
+  }, [navigation]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
       {label: '보기1', value: '1'},
       {label: '보기2', value: '2'},
+      {label: '보기1', value: '3'},
+      {label: '보기2', value: '4'},
   ]);
 
   const post_data = [
@@ -35,18 +49,9 @@ export default function PostList() {
     }
   ];
 
-  const renderItem = ({ item }) => (
-    <View>
-      <TouchableOpacity onPress={() => navigation.navigate('Post', {articleNo: item.articleNo})}>
-        <Text style={styles.postTitle}>{item.articleTitle}</Text>
-        <View style={styles.postSub}>
-          <Text style={styles.postTag}>{item.tag}</Text>
-          <Text>등록일: {item.updateDt}</Text>
-        </View>
-      </TouchableOpacity>
-      <Divider style={{ marginTop: 10, marginBottom: 10 }}></Divider>
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    return <PostPreview item={item} />
+  }
 
   return(
     <View style={styles.container}>
@@ -62,7 +67,7 @@ export default function PostList() {
             setItems={setItems}
             placeholder="카테고리"
             modalProps={{
-              animationType: 'fade',
+            animationType: 'fade',
             }}
             modalTitle="선택해주세요."
           />
@@ -89,21 +94,9 @@ export default function PostList() {
           />
         </View>
       </View>
-      <View style={styles.navigationBar}>
-        <View style={styles.navigationOption}>
-          <Text>search</Text>
-        </View>
-        <View style={styles.navigationOption}>
-          <Text>scrap</Text>
-        </View>
-        <View style={styles.navigationOption}>
-          <Text>home</Text>
-        </View>
-        <View style={styles.navigationOption}>
-          <Text>mypage</Text>
-        </View>
-      </View>
+      {NavigationBar}
     </View>
+
   )
 }
 
@@ -116,20 +109,10 @@ const styles = StyleSheet.create({
   body: {
     flex: 10,
   },
-  navigationBar: {
-    flex: 1,
-    backgroundColor: "#EEF5FE", 
-    paddingHorizontal: 0,
-    flexDirection: "row" 
-  },
-  navigationOption: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
   selectedCategory: {
     flex: 1,
     padding: 20,
+    zIndex: 1
   },
   tags: {
     flex: 0.7,    
