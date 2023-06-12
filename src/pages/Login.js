@@ -16,17 +16,16 @@ export default function Login(){
   
   const onChangeId = inputId => setId(inputId);
   const onChangePw = inputPw => setPw(inputPw);
-  console.log(id)
-  console.log(pw)
+
   const login = async () => {
     const res = await request(`/auth/login`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       }, 
       body: JSON.stringify({
-          id: "test4",
-          password: "1234"
+          id: id,
+          password: pw
       })
     });
     console.log('login')

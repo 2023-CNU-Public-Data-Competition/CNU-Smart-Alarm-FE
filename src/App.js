@@ -21,8 +21,14 @@ function HomeStack() {
   return (
     <Stack.Navigator> 
           {/* 해당스택에 들어갈 화면 요소를 넣어준다. */}
-            
-            <Stack.Screen 
+          <Stack.Screen 
+              name="SignUp" 
+              component={SignUp}
+              options={{
+                headerShown: false
+              }}
+            /> 
+          <Stack.Screen 
               name="SelectCategory" 
               component={SelectCategory}
               options={{
@@ -35,14 +41,7 @@ function HomeStack() {
               options={{
                 headerShown: false
               }}
-            /> 
-            <Stack.Screen 
-              name="SignUp" 
-              component={SignUp}
-              options={{
-                headerShown: false
-              }}
-            /> 
+            />
             
             <Stack.Screen 
               name="PostList" 
@@ -58,6 +57,12 @@ function HomeStack() {
                 },
               }}
             />
+            
+            
+             
+            
+            
+            
             <Stack.Screen 
               name="Post" 
               component={Post}
