@@ -13,7 +13,8 @@ export default function SelectCategory() {
   const navigation = useNavigation();
   const route = useRoute();
   const { token } = route.params;
-
+  const realToken = token._z;
+  
   const [openCategory, setOpenCategory] = useState(false);
   const [valueCategory, setValueCategory] = useState(null);
   const [itemsCategory, setItemsCategory] = useState([]);
@@ -117,13 +118,12 @@ export default function SelectCategory() {
   }
 
   const setUserCategories = async () => {
-    console.log("check!")
-    console.log(selectedCategories)
+    console.log(`api 호출 후: ${realToken}`)
     const res = await request('/liked_category', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'token': token
+        'Authorization': realToken
       },
       body: JSON.stringify(selectedCategories)
     });

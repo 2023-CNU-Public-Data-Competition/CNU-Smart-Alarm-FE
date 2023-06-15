@@ -26,8 +26,10 @@ export default function SignUp(){
           password: inputPw
       })
     });
-    console.log(res)
-    return res;
+    
+    const token = res.token;
+    console.log(`fetch 후 token: ${token}`)
+    return token;
   };
 
   return(
@@ -54,8 +56,9 @@ export default function SignUp(){
         <Button 
           title="회원가입"
           onPress={() => {
-            const sighUpRes = fetchSignUp(id, pw);
-            navigation.navigate("SelectCategory", {token: sighUpRes.token})
+            const token = fetchSignUp(id, pw);
+            console.log(`fetch 호출 후 token: ${token}`)
+            navigation.navigate("SelectCategory", {token: token})
           }}
         />
       </View>
