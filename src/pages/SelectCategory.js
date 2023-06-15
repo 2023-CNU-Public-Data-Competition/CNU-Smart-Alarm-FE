@@ -123,7 +123,7 @@ export default function SelectCategory() {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': realToken
+        Authorization: realToken
       },
       body: JSON.stringify(selectedCategories)
     });
