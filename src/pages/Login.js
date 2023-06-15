@@ -5,10 +5,11 @@ import { Chip, Divider } from "@react-native-material/core";
 import NavigationBar from "../components/NavigationBar";
 import { StatusBar } from "expo-status-bar";
 import { request } from '../api';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Login(){
+
   const navigation = useNavigation();
 
   const [id, setId] = useState("");
@@ -28,8 +29,19 @@ export default function Login(){
           password: pw
       })
     });
-    console.log('login')
-    console.log(res)
+
+    if(res) {
+      AsyncStorage.setItem(
+        'userData',
+        JSON.stringify({
+          token: res.token,
+          likedCategoryList: res.likedCategoryList,
+          userId: id
+        })
+      );
+
+      navigation.navigate("PostList");
+    }
   };
 
   return(

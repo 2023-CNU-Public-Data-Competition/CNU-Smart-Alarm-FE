@@ -83,8 +83,6 @@ export default function SelectCategory() {
     }
 */
     setSelectedCategories([...selectedCategories, valueInnerCategory]);
-    console.log("select!")
-    console.log(selectedCategories)
   }
 
   const cancelSelecting = (categoryNo) => {
@@ -97,8 +95,6 @@ export default function SelectCategory() {
     });
     
     setSelectedCategories(newSelectedCategories);
-    console.log("cancel!")
-    console.log(selectedCategories)
   }
 
   const renderItem = ({item}) => {
@@ -118,7 +114,6 @@ export default function SelectCategory() {
   }
 
   const setUserCategories = async () => {
-    console.log(`api 호출 후: ${realToken}`)
     const res = await request('/liked_category', {
       method: 'PUT',
       headers: {
@@ -127,7 +122,10 @@ export default function SelectCategory() {
       },
       body: JSON.stringify(selectedCategories)
     });
-    console.log(res)
+    
+    if(res) {
+      navigation.navigate("Login")
+    }
   }
   
 
