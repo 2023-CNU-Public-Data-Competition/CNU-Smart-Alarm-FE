@@ -6,12 +6,55 @@ import { Chip, Divider } from "@react-native-material/core";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import NavigationBar from "../components/NavigationBar";
 import PostPreview from "../components/postPreview";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { request } from '../api';
 
 export default function PostList() {
+
+  const route = useRoute();
+  
+  const loadUserData = async () => {
+    const data = await AsyncStorage.getItem('userData');
+    return data;
+  }
+
   const navigation = useNavigation();
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(0);
+  const [items, setItems] = useState([]);
+
+  const [selectedTag, setSelectedTag] = useState(false);
+  const [postData, setPostData] = useState(null);
+  const [isCategoryAll, setIsCategoryAll] = useState(true);
+
   useEffect(() => {
+    const fetchToken = async () => {
+      const userData = await loadUserData();
+      const userCategoryList = JSON.parse(userData).likedCategoryList.categoryList.map(
+        element => ({label: element.categoryName, value: element.categoryNo})
+      );      
+      setItems([{label: "전체", value: 0}, ...userCategoryList]);
+    };
+
+    fetchToken();
+
+    const fetchPosts = async () => {
+      const userData = await loadUserData();
+      const token = JSON.parse(userData).token;
+      const posts = await request('/posts?categoryNo=0&tag=ALL', {
+        headers: {
+          Authorization: token
+        },
+      });
+
+      setPostData(posts.postList)
+    }
+
+    fetchPosts();
+
     navigation.setOptions({
+      headerLeft: false,
       headerRight: () => (
         <Button
           title="notice"
@@ -19,39 +62,54 @@ export default function PostList() {
         />
       ),
     });
-  }, [navigation]);
+    }, [navigation]);
 
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-      {label: '보기1', value: '1'},
-      {label: '보기2', value: '2'},
-      {label: '보기1', value: '3'},
-      {label: '보기2', value: '4'},
-  ]);
+    useEffect(() => {
+      const fetchPosts = async () => {
+        const userData = await loadUserData();
+        const token = JSON.parse(userData).token;
+        const posts = await request(`/posts?categoryNo=${value}&tag=${selectedTag}`, {
+          headers: {
+            Authorization: token
+          },
+        });
+        
+        setPostData(posts.postList)
+      }
+  
+      fetchPosts();
+    }, [selectedTag])
 
-  const post_data = [
-    {
-        "articleNo": 1,
-        "categoryNo": 1,
-        "categoryName": "컴퓨터공학과",
-        "articleTitle": "test title",
-        "updateDt": "2023-05-22",
-        "tag": "NOTICE"
-    },
-    {
-      "articleNo": 2,
-      "categoryNo": 2,
-      "categoryName": "컴퓨터공학과",
-      "articleTitle": "test title 2",
-      "updateDt": "2023-05-23",
-      "tag": "NOTICE"
-    }
-  ];
+    useEffect(() => {
+      const fetchPosts = async () => {
+        const userData = await loadUserData();
+        const token = JSON.parse(userData).token;
+        const posts = await request(`/posts?categoryNo=${value}&tag=ALL`, {
+          headers: {
+            Authorization: token
+          },
+        });
+        
+        if(value === 0){
+          setIsCategoryAll(true);
+        } else{
+          setIsCategoryAll(false);
+        }
+        
+        
+        setPostData(posts.postList)
+      }
+  
+      fetchPosts();
+    }, [value])
 
   const renderItem = ({ item }) => {
-    return <PostPreview item={item} />
+    return <PostPreview item={item} isCategoryAll={isCategoryAll} />
   }
+
+  const selectTag = (tag) => {
+    setSelectedTag(tag)
+  };
 
   return(
     <View style={styles.container}>
@@ -65,7 +123,7 @@ export default function PostList() {
             setOpen={setOpen}
             setValue={setValue}
             setItems={setItems}
-            placeholder="카테고리"
+            placeholder="전체"
             modalProps={{
             animationType: 'fade',
             }}
@@ -74,21 +132,21 @@ export default function PostList() {
         </View>
 
         <View style={styles.tags}>
-          <Chip style={styles.tag} variant="outlined" label="전체" />
-          <Chip style={styles.tag} variant="outlined" label="대회" />
-          <Chip style={styles.tag} variant="outlined" label="인턴/취업" />
-          <Chip style={styles.tag} variant="outlined" label="장학" />
+          <Chip style={styles.tag} variant="outlined" label="전체" onPress={() => selectTag("ALL")}/>
+          <Chip style={styles.tag} variant="outlined" label="대회" onPress={() => selectTag("CONTEST")} />
+          <Chip style={styles.tag} variant="outlined" label="인턴/취업" onPress={() => selectTag("INTERN_JOB")} />
+          <Chip style={styles.tag} variant="outlined" label="장학" onPress={() => selectTag("SCHOLARSHIP")} />
         </View>
         <View style={styles.tags}>
-          <Chip style={styles.tag} variant="outlined" label="학사일정" />
-          <Chip style={styles.tag} variant="outlined" label="졸업" />
-          <Chip style={styles.tag} variant="outlined" label="특강" />
-          <Chip style={styles.tag} variant="outlined" label="기타 공지" />
+          <Chip style={styles.tag} variant="outlined" label="학사일정" onPress={() => selectTag("SCHEDULE")} />
+          <Chip style={styles.tag} variant="outlined" label="졸업" onPress={() => selectTag("GRADUATION")} />
+          <Chip style={styles.tag} variant="outlined" label="특강" onPress={() => selectTag("LECTURE")} />
+          <Chip style={styles.tag} variant="outlined" label="기타 공지" onPress={() => selectTag("NOTICE")} />
         </View>
 
         <View style={styles.postList}>
           <FlatList
-            data={post_data}
+            data={postData}
             renderItem={renderItem}
             keyExtractor={item => item.articleNo}
           />
@@ -127,20 +185,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderRadius: 20,
-  },
-  postTitle: {
-    fontSize: 23,
-    paddingBottom: 5
-  },
-  postSub: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  postTag: {
-    borderWidth: 1,
-    width: 100,
-    borderRadius: 10,
-    alignItems: "center",
   },
   tag: {
     width: 90, 

@@ -22,6 +22,13 @@ function HomeStack() {
     <Stack.Navigator> 
           {/* 해당스택에 들어갈 화면 요소를 넣어준다. */}
           <Stack.Screen 
+              name="Login" 
+              component={Login}
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
               name="SignUp" 
               component={SignUp}
               options={{
@@ -35,13 +42,7 @@ function HomeStack() {
                 headerShown: false
               }}
             /> 
-            <Stack.Screen 
-              name="Login" 
-              component={Login}
-              options={{
-                headerShown: false
-              }}
-            />
+            
             
             <Stack.Screen 
               name="PostList" 
@@ -111,9 +112,9 @@ function ScrapScreen() {
 export default function App() {
   return (
     //네비게이션의 트리를 관리해주는 컴포넌트 
-    <NavigationContainer> 
+    <NavigationContainer > 
       {/* 네비게이션 기본틀의 스택을 생성 */} 
-        <Tab.Navigator>
+        <Tab.Navigator initialRouteName="Home">
           <Tab.Screen name="Search" component={SearchScreen} />
           <Tab.Screen name="Scrap" component={ScrapScreen} />
           <Tab.Screen 
