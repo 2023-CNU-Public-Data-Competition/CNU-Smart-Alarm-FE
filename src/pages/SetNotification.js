@@ -6,6 +6,7 @@ import { Chip, Divider } from "@react-native-material/core";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import NavigationBar from "../components/NavigationBar";
 import PostPreview from "../components/postPreview";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function SetNotification() {
 
@@ -14,10 +15,14 @@ export default function SetNotification() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <Button
-          title="<<"
+        <View style={{marginLeft: 10}}>
+          <Icon 
+          name="arrow-left"
+          color="#4469C0"
+          size={30}
           onPress={() => navigation.navigate('Mypage')}
         />
+        </View>
       ),
     });
   }, [navigation]);

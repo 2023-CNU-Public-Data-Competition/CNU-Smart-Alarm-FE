@@ -7,6 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { request } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function SetNotification_tag(){
 
@@ -15,10 +16,14 @@ export default function SetNotification_tag(){
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <Button
-          title="<<"
+        <View style={{marginLeft: 10}}>
+          <Icon 
+          name="arrow-left"
+          color="#4469C0"
+          size={30}
           onPress={() => navigation.navigate('SetNotification')}
         />
+        </View>
       ),
     });
   }, [navigation])
@@ -37,6 +42,7 @@ export default function SetNotification_tag(){
           style={styles.tags}
           textStyle={{ textDecorationLine: "none", color: '#000000'}} 
           text="대회" 
+          isChecked={true}
           fillColor="#4469C0"
           //onPress={(isChecked: boolean) => {}} 
           />
@@ -44,6 +50,7 @@ export default function SetNotification_tag(){
           style={styles.tags}
           textStyle={{ textDecorationLine: "none", color: '#000000'}} 
           text="인턴/취업" 
+          isChecked={true}
           fillColor="#4469C0"
           //onPress={(isChecked: boolean) => {}} 
           />
@@ -84,10 +91,14 @@ export default function SetNotification_tag(){
           />
       </View>
       <View style={styles.submitForm}>
-        <Button
-          title="저장하기"
-          onPress={()=>navigation.navigate('SetNotification')}
-        />
+        <View style={styles.button}>
+          <Button
+            style={styles.buttonText}
+            color={"white"}
+            title="저장하기"
+            onPress={()=>navigation.navigate('SetNotification')}
+          />
+        </View>
       </View>
     </View>
   );
@@ -117,7 +128,17 @@ const styles = StyleSheet.create({
   buttons: {
     borderWidth: 1,
   },
+  button: {
+    backgroundColor: "#4469C0",
+    borderRadius: 5,
+    width: 100,
+    alignItems: "center",
+    justifyContent: "center"
+  },
   submitForm: {
-    flex: 1
+    flex: 2,
+    alignItems: "flex-end",
+    justifyContent: 'flex-start',
+    marginRight: 30 
   }
 })

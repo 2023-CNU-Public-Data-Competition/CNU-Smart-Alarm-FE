@@ -57,7 +57,6 @@ export default function SignUp(){
           title="회원가입"
           onPress={() => {
             const token = fetchSignUp(id, pw);
-            console.log(`fetch 호출 후 token: ${token}`)
             navigation.navigate("SelectCategory", {token: token})
           }}
         />

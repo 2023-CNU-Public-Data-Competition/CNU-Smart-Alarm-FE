@@ -10,18 +10,9 @@ import PostPreview from "../components/postPreview";
 export default function Mypage() {
 
   const navigation = useNavigation();
-/*
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <Button
-          title="<<"
-          onPress={() => navigation.navigate('PostList')}
-        />
-      ),
-    });
-  }, [navigation]);
-  */
+
+  
+  
   return(
     <View style={styles.container}>
       <TouchableOpacity style={styles.buttonArea}>

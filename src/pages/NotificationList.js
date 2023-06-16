@@ -8,6 +8,7 @@ import NavigationBar from "../components/NavigationBar";
 import PostPreview from "../components/postPreview";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { request } from "../api";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function NotificationList() {
   const navigation = useNavigation();
@@ -33,23 +34,15 @@ export default function NotificationList() {
     fetchNotification();
     navigation.setOptions({
       headerLeft: () => (
-        <Button
-          title="<<"
+        <View style={{marginLeft: 10}}>
+          <Icon 
+          name="arrow-left"
+          color="#4469C0"
+          size={30}
           onPress={() => navigation.navigate('PostList')}
         />
-      ),
-      headerTitle: () => (
-        <View >
-          <Text>알림</Text>
         </View>
       ),
-      headerStyle: {
-        backgroundColor: '#EEF5FE',
-      },
-      headerTitleStyle: {
-        color: "#4469C0",
-        fontSize: 25
-      },
       headerRight: () => (
         <Button
           title="편집"

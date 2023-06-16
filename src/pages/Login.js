@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { Chip, Divider } from "@react-native-material/core";
 import NavigationBar from "../components/NavigationBar";
@@ -7,9 +7,17 @@ import { StatusBar } from "expo-status-bar";
 import { request } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export default function Login(){
 
+  const LogoScreen = () => (
+    <View style={styles.container}>
+      <ImageBackground 
+        source={require('../../assets/cnu_knockknock.png')} 
+        resizeMode='cover'
+        style={styles.image}
+      />
+    </View>
+  )
   const navigation = useNavigation();
 
   const [id, setId] = useState("");
@@ -113,5 +121,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "flex-end",
     padding: 50
+  },
+  
+  image: {
+    flex: 1,
+    justifyContent: "center"
   }
 })

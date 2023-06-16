@@ -103,7 +103,7 @@ export default function SelectCategory() {
     };
 
     return(
-      <View style={styles.selectedCategory} key={item.categoryNo}>
+      <View style={styles.selectedCategory}>
         <Button
           title="X"
           onPress={handleCancel}

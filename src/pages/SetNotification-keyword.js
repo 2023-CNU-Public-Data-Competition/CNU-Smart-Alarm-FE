@@ -6,6 +6,7 @@ import NavigationBar from "../components/NavigationBar";
 import { StatusBar } from "expo-status-bar";
 import { request } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 export default function SetNotification_keyword(){
@@ -16,7 +17,7 @@ export default function SetNotification_keyword(){
   
   const onChangeKeyword = inputKeyword => setKeyword(inputKeyword);
 
-  const [keywordList, setKeywordList] = useState([]);
+  const [keywordList, setKeywordList] = useState(["공공데이터", "설명회"]);
 
   const addKeyword = () => {
     setKeywordList([...keywordList, keyword]);
@@ -26,10 +27,14 @@ export default function SetNotification_keyword(){
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <Button
-          title="<<"
+        <View style={{marginLeft: 10}}>
+          <Icon 
+          name="arrow-left"
+          color="#4469C0"
+          size={30}
           onPress={() => navigation.navigate('SetNotification')}
         />
+        </View>
       ),
     });
   }, [navigation])
@@ -53,11 +58,10 @@ export default function SetNotification_keyword(){
       <View style={styles.keywordList}>
         {keywordList.map(element => (
           <View style={styles.keyword}>
-            <Text>{element}</Text>
-            <Button 
-              style={styles.buttons}
-              title="X"
-              //onPress={() => navigation.navigate("SignUp")}
+            <Text style={{fontSize: 17, marginRight: 5}}>{element}</Text>
+            <Icon
+              name="close-circle"
+              size={20}
             />
           </View>
         ))}
@@ -65,10 +69,14 @@ export default function SetNotification_keyword(){
         
       </View>
       <View style={styles.submitForm}>
-        <Button
-          title="저장하기"
-          onPress={()=>navigation.navigate('SetNotification')}
-        />
+        <View style={styles.button}>
+          <Button
+            style={styles.buttonText}
+            color={"white"}
+            title="저장하기"
+            onPress={()=>navigation.navigate('SetNotification')}
+          />
+        </View>
       </View>
     </View>
   );
@@ -102,18 +110,29 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   keyword: {
-    backgroundColor: "lightgrey",
+    backgroundColor: "#F1F1F1",
     borderRadius: 20,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 10,
-    marginRight: 5
+    marginRight: 5,
+    height: 30
   },
   buttons: {
     borderWidth: 1,
   },
+  button: {
+    backgroundColor: "#4469C0",
+    borderRadius: 5,
+    width: 100,
+    alignItems: "center",
+    justifyContent: "center"
+  },
   submitForm: {
-    flex: 6
+    flex: 6,
+    alignItems: "flex-end",
+    justifyContent: 'flex-start',
+    marginRight: 30 
   }
 })
