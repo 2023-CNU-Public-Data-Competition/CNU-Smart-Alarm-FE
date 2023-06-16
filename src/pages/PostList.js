@@ -24,13 +24,14 @@ export default function PostList() {
   const [value, setValue] = useState(0);
   const [items, setItems] = useState([]);
 
-  const [selectedTag, setSelectedTag] = useState(false);
+  const [selectedTag, setSelectedTag] = useState("ALL");
   const [postData, setPostData] = useState(null);
   const [isCategoryAll, setIsCategoryAll] = useState(true);
 
   useEffect(() => {
     const fetchToken = async () => {
       const userData = await loadUserData();
+      console.log(userData)
       const userCategoryList = JSON.parse(userData).likedCategoryList.categoryList.map(
         element => ({label: element.categoryName, value: element.categoryNo})
       );      
@@ -42,13 +43,15 @@ export default function PostList() {
     const fetchPosts = async () => {
       const userData = await loadUserData();
       const token = JSON.parse(userData).token;
-      const posts = await request('/posts?categoryNo=0&tag=ALL', {
+      const posts = await request('/posts?categoryNo=0&tag=전체', {
         headers: {
           Authorization: token
         },
       });
 
-      setPostData(posts.postList)
+      if(posts) {
+        setPostData(posts.postList)
+      }
     }
 
     fetchPosts();
@@ -74,7 +77,10 @@ export default function PostList() {
           },
         });
         
-        setPostData(posts.postList)
+        if(posts) {
+          console.log(posts)
+          setPostData(posts.postList)
+        }
       }
   
       fetchPosts();
@@ -84,7 +90,7 @@ export default function PostList() {
       const fetchPosts = async () => {
         const userData = await loadUserData();
         const token = JSON.parse(userData).token;
-        const posts = await request(`/posts?categoryNo=${value}&tag=ALL`, {
+        const posts = await request(`/posts?categoryNo=${value}&tag=전체`, {
           headers: {
             Authorization: token
           },
@@ -97,7 +103,9 @@ export default function PostList() {
         }
         
         
-        setPostData(posts.postList)
+        if(posts) {
+          setPostData(posts.postList)
+        }
       }
   
       fetchPosts();
@@ -132,16 +140,16 @@ export default function PostList() {
         </View>
 
         <View style={styles.tags}>
-          <Chip style={styles.tag} variant="outlined" label="전체" onPress={() => selectTag("ALL")}/>
-          <Chip style={styles.tag} variant="outlined" label="대회" onPress={() => selectTag("CONTEST")} />
-          <Chip style={styles.tag} variant="outlined" label="인턴/취업" onPress={() => selectTag("INTERN_JOB")} />
-          <Chip style={styles.tag} variant="outlined" label="장학" onPress={() => selectTag("SCHOLARSHIP")} />
+          <Chip style={styles.tag} variant="outlined" label="전체" onPress={() => selectTag("전체")}/>
+          <Chip style={styles.tag} variant="outlined" label="대회" onPress={() => selectTag("대회")} />
+          <Chip style={styles.tag} variant="outlined" label="인턴/취업" onPress={() => selectTag("인턴/취업")} />
+          <Chip style={styles.tag} variant="outlined" label="장학" onPress={() => selectTag("장학")} />
         </View>
         <View style={styles.tags}>
-          <Chip style={styles.tag} variant="outlined" label="학사일정" onPress={() => selectTag("SCHEDULE")} />
-          <Chip style={styles.tag} variant="outlined" label="졸업" onPress={() => selectTag("GRADUATION")} />
-          <Chip style={styles.tag} variant="outlined" label="특강" onPress={() => selectTag("LECTURE")} />
-          <Chip style={styles.tag} variant="outlined" label="기타 공지" onPress={() => selectTag("NOTICE")} />
+          <Chip style={styles.tag} variant="outlined" label="학사일정" onPress={() => selectTag("학사일정")} />
+          <Chip style={styles.tag} variant="outlined" label="졸업" onPress={() => selectTag("졸업")} />
+          <Chip style={styles.tag} variant="outlined" label="특강" onPress={() => selectTag("특강")} />
+          <Chip style={styles.tag} variant="outlined" label="기타 공지" onPress={() => selectTag("기타 공지")} />
         </View>
 
         <View style={styles.postList}>
@@ -152,7 +160,6 @@ export default function PostList() {
           />
         </View>
       </View>
-      {NavigationBar}
     </View>
 
   )

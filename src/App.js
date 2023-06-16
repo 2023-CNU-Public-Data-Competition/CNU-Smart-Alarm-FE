@@ -11,6 +11,9 @@ import SelectCategory from './pages/SelectCategory';
 import Mypage from './pages/Mypage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SetNotification from './pages/SetNotification';
+import SetNotification_keyword from './pages/SetNotification-keyword';
+import SetNotification_tag from './pages/SetNotification-tag';
+import SetNotification_category from './pages/SetNotification-category';
 
 // 앱이 각 화면이 전환될 수 있는 기본 틀을 제공한다. 
 const Stack = createStackNavigator(); 
@@ -50,7 +53,7 @@ function HomeStack() {
               options={{
                 title: "CNU 똑똑이",
                 headerStyle: {
-                  backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
+                  backgroundColor: '#EEF5FE',
                 },
                 headerTitleStyle: {
                   color: "#4469C0",
@@ -87,6 +90,48 @@ function HomeStack() {
               component={SetNotification}
               options={{
                 title: "알림 편집",
+                headerStyle: {
+                  backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
+                },
+                headerTitleStyle: {
+                  color: "#4469C0",
+                  fontSize: 25
+                },
+              }}
+            /> 
+            <Stack.Screen 
+              name="SetNotification_keyword" 
+              component={SetNotification_keyword}
+              options={{
+                title: "키워드 알림",
+                headerStyle: {
+                  backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
+                },
+                headerTitleStyle: {
+                  color: "#4469C0",
+                  fontSize: 25
+                },
+              }}
+            /> 
+            <Stack.Screen 
+              name="SetNotification_tag" 
+              component={SetNotification_tag}
+              options={{
+                title: "태그 알림",
+                headerStyle: {
+                  backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
+                },
+                headerTitleStyle: {
+                  color: "#4469C0",
+                  fontSize: 25
+                },
+              }}
+            /> 
+            <Stack.Screen 
+              name="SetNotification_category" 
+              component={SetNotification_category}
+              options={{
+                title: "카테고리 알림",
                 headerStyle: {
                   backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
                 },

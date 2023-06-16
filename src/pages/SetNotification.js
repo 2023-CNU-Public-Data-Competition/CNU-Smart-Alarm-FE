@@ -24,18 +24,24 @@ export default function SetNotification() {
   
   return(
     <View style={styles.container}>
-      <TouchableOpacity style={styles.buttonArea}>
+      <TouchableOpacity 
+        style={styles.buttonArea}
+        onPress={() => navigation.navigate('SetNotification_category')}  
+      >
         <Text style={styles.buttons}>카테고리 알림</Text>
       </TouchableOpacity>
       <Divider/>
       <TouchableOpacity 
         style={styles.buttonArea}
-        onPress={() => navigation.navigate('SetNotification')}  
+        onPress={() => navigation.navigate('SetNotification_keyword')}  
       >
         <Text style={styles.buttons}>키워드 알림</Text>
       </TouchableOpacity>
       <Divider />
-      <TouchableOpacity style={styles.buttonArea}>
+      <TouchableOpacity 
+        style={styles.buttonArea}
+        onPress={() => navigation.navigate('SetNotification_tag')}  
+      >
         <Text style={styles.buttons}>태그 알림</Text>
       </TouchableOpacity>
       <Divider/>

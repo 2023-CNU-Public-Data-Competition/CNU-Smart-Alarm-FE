@@ -6,30 +6,31 @@ import { Chip, Divider } from "@react-native-material/core";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import NavigationBar from "../components/NavigationBar";
 import PostPreview from "../components/postPreview";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { request } from "../api";
 
 export default function NotificationList() {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const dummy = [
-    {
-        "articleNo": 1,
-        "articleTitle": "title1",
-        "alarmType": "CATEGORY",
-        "alarmName": "컴퓨터융합학부",
-        "updateDate": "6월 7, 2023"
-    },
-    {
-        "articleNo": 2,
-        "articleTitle": "title2",
-        "alarmType": "KEYWORD",
-        "alarmName": "해커톤",
-        "updateDate": "6월 7, 2023"
-    }
-  ];
+  const [notifications, setNotifications] = useState(null);
 
   useEffect(() => {
+    const fetchNotification = async () => {
+      const userData = await AsyncStorage.getItem('userData');
+      if(userData){
+        const userId = JSON.parse(userData).userId;
+        const token = JSON.parse(userData).token;
+        const res = await request('/alarms', {
+          headers: {
+            Authorization: token
+          }
+        });
+        setNotifications(res);
+      }
+    };
+
+    fetchNotification();
     navigation.setOptions({
       headerLeft: () => (
         <Button
@@ -39,12 +40,15 @@ export default function NotificationList() {
       ),
       headerTitle: () => (
         <View >
-          <Text style={styles.header}>알림</Text>
+          <Text>알림</Text>
         </View>
       ),
       headerStyle: {
-        backgroundColor: '#EEF5FE', // 원하는 배경 색상으로 변경
-        color: "4469C0" 
+        backgroundColor: '#EEF5FE',
+      },
+      headerTitleStyle: {
+        color: "#4469C0",
+        fontSize: 25
       },
       headerRight: () => (
         <Button
@@ -63,7 +67,7 @@ export default function NotificationList() {
     <View style={styles.container}>
       <View>
           <FlatList
-            data={dummy}
+            data={notifications}
             renderItem={renderItem}
             keyExtractor={item => item.articleNo}
           />
@@ -73,10 +77,6 @@ export default function NotificationList() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 25,
-    color: "4469C0" 
-  },
   container: {
     flex: 1,
     backgroundColor: "white",

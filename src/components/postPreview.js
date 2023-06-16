@@ -38,11 +38,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   postTag: {
+    borderRadius: 8,
     borderWidth: 1,
     marginRight: 5,
     paddingHorizontal: 5,
     paddingVertical: 2,
-    borderRadius: 8,
     alignItems: "center",
   },
 })
