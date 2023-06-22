@@ -8,6 +8,8 @@ import NavigationBar from "../components/NavigationBar";
 import PostPreview from "../components/postPreview";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { request } from '../api';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 export default function PostList() {
 
@@ -24,13 +26,14 @@ export default function PostList() {
   const [value, setValue] = useState(0);
   const [items, setItems] = useState([]);
 
-  const [selectedTag, setSelectedTag] = useState(false);
+  const [selectedTag, setSelectedTag] = useState("전체");
   const [postData, setPostData] = useState(null);
   const [isCategoryAll, setIsCategoryAll] = useState(true);
 
   useEffect(() => {
     const fetchToken = async () => {
       const userData = await loadUserData();
+      console.log(userData)
       const userCategoryList = JSON.parse(userData).likedCategoryList.categoryList.map(
         element => ({label: element.categoryName, value: element.categoryNo})
       );      
@@ -42,13 +45,15 @@ export default function PostList() {
     const fetchPosts = async () => {
       const userData = await loadUserData();
       const token = JSON.parse(userData).token;
-      const posts = await request('/posts?categoryNo=0&tag=ALL', {
+      const posts = await request('/posts?categoryNo=0&tag=전체', {
         headers: {
           Authorization: token
         },
       });
 
-      setPostData(posts.postList)
+      if(posts) {
+        setPostData(posts.postList)
+      }
     }
 
     fetchPosts();
@@ -56,10 +61,15 @@ export default function PostList() {
     navigation.setOptions({
       headerLeft: false,
       headerRight: () => (
-        <Button
-          title="notice"
-          onPress={() => navigation.navigate('NotificationList')}
-        />
+        <View style={{ marginRight: 10 }}>
+          <Icon
+            name="bell-outline"
+            size={30}
+            color="#4469C0"
+            onPress={()=> navigation.navigate('NotificationList')}
+          />
+        </View>
+        
       ),
     });
     }, [navigation]);
@@ -74,7 +84,10 @@ export default function PostList() {
           },
         });
         
-        setPostData(posts.postList)
+        if(posts) {
+          console.log(posts)
+          setPostData(posts.postList)
+        }
       }
   
       fetchPosts();
@@ -84,7 +97,7 @@ export default function PostList() {
       const fetchPosts = async () => {
         const userData = await loadUserData();
         const token = JSON.parse(userData).token;
-        const posts = await request(`/posts?categoryNo=${value}&tag=ALL`, {
+        const posts = await request(`/posts?categoryNo=${value}&tag=전체`, {
           headers: {
             Authorization: token
           },
@@ -97,7 +110,10 @@ export default function PostList() {
         }
         
         
-        setPostData(posts.postList)
+        if(posts) {
+          setPostData(posts.postList)
+          setSelectedTag("전체")
+        }
       }
   
       fetchPosts();
@@ -109,6 +125,14 @@ export default function PostList() {
 
   const selectTag = (tag) => {
     setSelectedTag(tag)
+  };
+
+  const setVariant = tag => {
+    if(selectedTag === tag) {
+      return "filled"
+    } else {
+      return "outlined"
+    }
   };
 
   return(
@@ -132,16 +156,16 @@ export default function PostList() {
         </View>
 
         <View style={styles.tags}>
-          <Chip style={styles.tag} variant="outlined" label="전체" onPress={() => selectTag("ALL")}/>
-          <Chip style={styles.tag} variant="outlined" label="대회" onPress={() => selectTag("CONTEST")} />
-          <Chip style={styles.tag} variant="outlined" label="인턴/취업" onPress={() => selectTag("INTERN_JOB")} />
-          <Chip style={styles.tag} variant="outlined" label="장학" onPress={() => selectTag("SCHOLARSHIP")} />
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("전체")} label="전체" onPress={() => selectTag("전체")}/>
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("인턴/취업")} label="인턴/취업" onPress={() => selectTag("인턴/취업")} />
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("장학")} label="장학" onPress={() => selectTag("장학")} />
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("대회")} label="대회" onPress={() => selectTag("대회")} />
         </View>
         <View style={styles.tags}>
-          <Chip style={styles.tag} variant="outlined" label="학사일정" onPress={() => selectTag("SCHEDULE")} />
-          <Chip style={styles.tag} variant="outlined" label="졸업" onPress={() => selectTag("GRADUATION")} />
-          <Chip style={styles.tag} variant="outlined" label="특강" onPress={() => selectTag("LECTURE")} />
-          <Chip style={styles.tag} variant="outlined" label="기타 공지" onPress={() => selectTag("NOTICE")} />
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("학사일정")} label="학사일정" onPress={() => selectTag("학사일정")} />
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("졸업")} label="졸업" onPress={() => selectTag("졸업")} />
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("특강")} label="특강" onPress={() => selectTag("특강")} />
+          <Chip style={styles.tag} color="#4469C0" variant={setVariant("기타 공지")} label="기타 공지" onPress={() => selectTag("기타 공지")} />
         </View>
 
         <View style={styles.postList}>
@@ -152,7 +176,6 @@ export default function PostList() {
           />
         </View>
       </View>
-      {NavigationBar}
     </View>
 
   )
@@ -178,6 +201,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20, 
+    paddingVertical: 3
   },
   postList: {
     flex: 10,

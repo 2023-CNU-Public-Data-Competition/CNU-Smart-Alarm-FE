@@ -1,68 +1,116 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { View, Text, Button, StyleSheet, useWindowDimensions } from 'react-native';
 import { Chip, Divider } from "@react-native-material/core";
 import NavigationBar from "../components/NavigationBar";
 import { StatusBar } from "expo-status-bar";
+import { request } from '../api';
+import RenderHTML from 'react-native-render-html';
+import { ScrollView } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Post() {
   const navigation = useNavigation();
   const route = useRoute();
+  console.log(route);
+  //console.log(navigation.getCurrentRoute().name)
   const { articleNo } = route.params;
 
-  const dummy = {
-    "articleNo": 1,
-    "categoryDto": {
-        "categoryNo": 1,
-        "categoryType": "공과대학",
-        "categoryName": "컴퓨터공학과"
-    },
-    "articleTitle": "test title",
-    "articleText": "test용 게시글 입니다.",
-    "writerName": "익명",
-    "clickCnt": 0,
-    "updateDate": "5월 22, 2023",
-    "tag": "기타 공지",
-    "attachmentDtoList": []
-  }
+  const [post, setPost] = useState(null);
+  const {width} = useWindowDimensions();
+
+  const [bookmark, setBookmark] = useState(false);
 
   useEffect(() => {
+    const fetchPost = async () => {
+      const post = await request(`/contents?articleNo=${articleNo}`);
+      setPost(post);
+    }
+    
+    fetchPost();
+
     navigation.setOptions({
       headerLeft: () => (
-        <Button
-          title="<<"
+        <View style={{marginLeft: 10}}>
+          <Icon 
+          name="arrow-left"
+          color="#4469C0"
+          size={30}
           onPress={() => navigation.navigate('PostList')}
         />
+        </View>
       ),
     });
   }, [navigation]);
 
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.articleInfo}>
-        <View style={styles.infoMain}>
-          <Button
-            title="ㅁ"
-          />
-          <Text style={styles.articleTitle}>{dummy.articleTitle}</Text>
+  
+  if(post) {
+    const source = {
+      html: post.articleText
+    };
+
+    const titleLen = post.articleTitle.length;
+    let dynamicStyle;
+
+    if(titleLen <= 20) {
+      dynamicStyle = {flex: 1}
+    } else if(titleLen <= 40) {
+      dynamicStyle = {flex: 1.5}
+    } else {
+      dynamicStyle = {flex: 2}
+    }
+    
+
+    return (
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <View style={styles.article}>
+          <View style={[styles.articleInfo, dynamicStyle]}>
+            <View style={styles.infoMain}>
+                {bookmark ? 
+                  <Icon
+                    name="bookmark"
+                    size={30}
+                    onPress={()=>setBookmark(!bookmark)}
+                  /> :
+                  <Icon
+                    name="bookmark-outline"
+                    size={30}
+                    onPress={()=>setBookmark(!bookmark)}
+                  />
+                }
+              <Text style={styles.articleTitle}>{post.articleTitle}</Text>
+            </View>
+            <View style={styles.infoSub}>
+              <View style={styles.tag}>
+                <Text style={styles.postTag}>{post.tag}</Text>
+              </View>
+              <Text style={styles.details}>등록일: {post.updateDate} {'\n'} 글 작성자: {post.writerName} {'\n'} 조회수: {post.clickCnt}</Text>
+            </View>
+          </View>
+          <Divider></Divider>
+          <View style={styles.articleText}>
+            <ScrollView>
+              <RenderHTML
+                contentWidth={width}
+                source={source}
+              />
+            </ScrollView>
+          </View>
         </View>
-        <View style={styles.infoSub}>
-          <Chip style={styles.postTag} label={dummy.tag} />
-          <Text>등록일: {dummy.updateDate} {'\n'} 글 작성자: {dummy.writerName}</Text>
-        </View>
+        
       </View>
-      <Divider></Divider>
-      <View style={styles.articleText}>
-        <Text>{dummy.articleText}</Text>
-      </View>
-      {NavigationBar}
-    </View>
-  );
+    );
+  }
+  
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  article: {
     flex: 1,
     backgroundColor: "white",
     margin: 20,
@@ -71,10 +119,12 @@ const styles = StyleSheet.create({
   },
   articleInfo: {
     flex: 1,
-    margin: 5
+    margin: 5,
+    marginBottom: 15
   },
   infoMain:{
-    flexDirection: "row"
+    flexDirection: "row",
+    width: '90%'
   },
   infoSub: {
     flexDirection: "row",
@@ -82,19 +132,27 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 10
   },
+  details: {
+    textAlign: "right"
+  },
   articleTitle: {
-    fontSize: 18
+    fontSize: 18,
   },
   articleText: {
-    flex: 8,
+    flex: 10,
     margin: 10
   },
   postTag: {
-    borderWidth: 1,
-    width: 80,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    opacity: 1
+  },
+  tag: {
+    marginTop: 6,
+    borderRadius: 8,
     height: 20,
-    borderRadius: 10,
-    alignItems: "center",
+    backgroundColor: "#C4F1E8",
     justifyContent: "center",
+    alignItems: "center",
   }
 })

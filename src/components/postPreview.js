@@ -6,16 +6,36 @@ import { Divider } from "@react-native-material/core";
 export default function PostPreview({ item, isCategoryAll }){
   const currentScreen = useRoute().name;
   const navigation = useNavigation();
-  console.log(isCategoryAll)
+
   
+  const setTagColor = (alarmType) => {
+    console.log(alarmType)
+    if(alarmType ==="KEYWORD") {
+      return styles.keywordTag;
+    } else if(alarmType === "CATEGORY") {
+      return styles.categoryTag;
+    } else{
+      return styles.tagTag;
+    }
+  }
   return(
     <View>
       <TouchableOpacity onPress={() => navigation.navigate('Post', {articleNo: item.articleNo})}>
         <Text style={styles.postTitle}>{item.articleTitle}</Text>
         <View style={styles.postSub}>
           <View style={styles.tags}>
-            {isCategoryAll ? <Text style={styles.postTag}>{item.categoryName}</Text> : <Text />}
-            <Text style={styles.postTag}>{currentScreen !=="PostList" ? item.alarmName : item.tag}</Text>
+            <View style={isCategoryAll ? styles.categoryTag : styles.none}>
+              {isCategoryAll ? <Text style={styles.postTag}>{item.categoryName}</Text> : <Text />}
+            </View>
+            {
+              currentScreen !== "PostList" ? 
+              <View style={setTagColor(item.alarmType)}>
+                <Text style={styles.postTag}>{item.alarmName}</Text>
+              </View> :
+              <View style={styles.tagTag}>
+                <Text style={styles.postTag}>{item.tag}</Text>
+              </View>
+            }
           </View>
           <Text>{currentScreen !== "PostList" ? item.updateDate : "등록일: " + item.updateDate}</Text>
         </View>
@@ -38,11 +58,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   postTag: {
-    borderWidth: 1,
-    marginRight: 5,
     paddingHorizontal: 5,
     paddingVertical: 2,
-    borderRadius: 8,
     alignItems: "center",
+    opacity: 1
+  },
+  categoryTag: {
+    marginRight: 5,
+    borderRadius: 8,
+    backgroundColor: "#ADD3FF"
+  },
+  none: {
+
+  },
+  keywordTag: {
+    borderRadius: 8,
+    backgroundColor: "#FFF7AC",
+  },
+  tagTag: {
+    borderRadius: 8,
+    backgroundColor: "#C4F1E8",
   },
 })
